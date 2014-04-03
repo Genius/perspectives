@@ -1,0 +1,12 @@
+{
+  "config/projections.json": {"command": "projections"},
+  "config/application.rb": {"command": "application"},
+  "app/perspectives/*.rb": {
+    "command": "perspective",
+    "alternate": "app/mustaches/%s.mustache"
+  },
+  "app/mustaches/*.mustache": {
+    "command": "mview",
+    "alternate": "app/perspectives/%s.rb"
+  }
+}
