@@ -16,7 +16,7 @@
           return new_value
         })
 
-        view[key].toString = function() { return $.map(this, function(value) { return value.render }).join('') }
+        view[key].toString = function() { return $.map(this, function(value) { return value.to_html }).join('') }
       } else if (data[key] && typeof data[key] === 'object' && data[key]['_template_key']) {
         view[key] = renderTemplateData(data[key])
       } else {
