@@ -63,7 +63,7 @@ module Perspectives
         prop_name = options.fetch(:property, _default_property_name(name_str, options)).to_sym
 
         unless block_given? || method_defined?(prop_name)
-          local_procs = locals.each_with_object({}) { |(k, v), h| h[k.to_sym] = v.to_proc }
+          local_procs = locals.each_with_object({}) { |(k, v), h| h[k.to_sym] = v.respond_to?(:to_proc) ? v.to_proc : proc { v } }
           nested_klass_ivar = :"@_#{name_str.underscore.gsub('/', '__')}_klass"
 
           define_method(prop_name) do

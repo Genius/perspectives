@@ -23,11 +23,11 @@ module Perspectives
     def_delegator 'ActiveSupport::Cache', :expand_cache_key
 
     def resolve_partial_class_name(top_level_view_namespace, name)
-      classified = name.to_s.classify
+      camelized = name.to_s.camelize
 
-      [top_level_view_namespace, classified].join('::').constantize
+      [top_level_view_namespace, camelized].join('::').constantize
     rescue NameError
-      classified.constantize
+      camelized.constantize
     end
 
     private
