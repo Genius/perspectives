@@ -1,6 +1,7 @@
 require 'forwardable'
 require 'mustache'
 require 'active_support/core_ext/string/inflections'
+require 'perspectives/collection'
 require 'perspectives/base'
 require 'perspectives/configuration'
 require 'perspectives/mustache_compiler'
@@ -18,7 +19,7 @@ module Perspectives
       yield(configuration)
     end
 
-    def_delegators :configuration, :cache, :caching?, :template_path
+    def_delegators :configuration, :cache, :caching?, :template_path, :raise_on_context_miss?
     def_delegator 'ActiveSupport::Cache', :expand_cache_key
 
     def resolve_partial_class_name(top_level_view_namespace, name)
@@ -34,5 +35,9 @@ module Perspectives
     def configuration
       @configuration ||= Configuration.new
     end
+  end
+
+  configure do |c|
+    c.raise_on_context_miss = true
   end
 end

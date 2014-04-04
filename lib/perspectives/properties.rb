@@ -81,7 +81,7 @@ module Perspectives
               return unless collection.present?
 
               as = options.fetch(:as, collection.first.class.base_class.name.downcase).to_sym
-              collection.map { |o| klass.new(context, realized_locals.merge(as => o)) }
+              Collection.new(collection.map { |o| klass.new(context, realized_locals.merge(as => o)) })
             else
               klass.new(context, realized_locals)
             end
@@ -94,7 +94,7 @@ module Perspectives
 
       def _default_property_name(name_str, options)
         name = name_str.split('/').last
-        name = n.pluralize if options.key?(:collection)
+        name = name.pluralize if options.key?(:collection)
         name
       end
     end

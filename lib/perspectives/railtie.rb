@@ -10,13 +10,13 @@ module Perspectives
       app.config.assets.paths << File.expand_path('../../../vendor/assets/javascripts', __FILE__)
 
       Perspectives::Base.class_eval do
+        include ActionView::Helpers
         include app.routes.url_helpers
         include ERB::Util
       end
 
       Perspectives.configure do |c|
         c.template_path = app.root.join('app', 'mustaches')
-        c.raise_on_context_miss = true
       end
 
       app.assets.register_engine '.mustache', Perspectives::MustacheCompiler

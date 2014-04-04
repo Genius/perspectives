@@ -22,7 +22,7 @@ module Perspectives
       end
     end
 
-    def perspectives(name, params_or_options = {})
+    def perspective(name, params_or_options = {})
       if params_or_options.key?(:context) || params_or_options.key?(:params)
         params = params_or_options.fetch(:params, {})
         context = params_or_options.fetch(:context, default_context)

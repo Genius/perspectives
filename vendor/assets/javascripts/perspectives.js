@@ -2,7 +2,7 @@
   var renderTemplateData = function(data) {
     var view = {}
 
-    for(key in data) {
+    for(var key in data) {
       if (!data.hasOwnProperty(key)) continue
 
       if ($.isArray(data[key])) {
@@ -15,6 +15,8 @@
 
           return new_value
         })
+
+        view[key].toString = function() { return $.map(this, function(value) { return value.render }).join('') }
       } else if (data[key] && typeof data[key] === 'object' && data[key]['_template_key']) {
         view[key] = renderTemplateData(data[key])
       } else {
@@ -42,7 +44,7 @@
 
   var renderPerspectivesResponse = function(href, container, json, status, xhr) {
     var $container = $(container)
-    console.time(' perspectives rendering')
+    console.time('perspectives rendering')
 
     var version = PerspectivesVersion() || ''
     if (version.length && version !== xhr.getResponseHeader('X-Perspectives-Version')) {
@@ -76,7 +78,7 @@
 
     $(document).trigger('perspectives:reload')
 
-    console.timeEnd(' perspectives rendering')
+    console.timeEnd('perspectives rendering')
   }
 
   var handlePerspectivesClick = function(container) {
@@ -105,4 +107,6 @@
       return handlePerspectivesClick.bind(this)(container)
     })
   }
+
+  LP.renderTemplateData = renderTemplateData
 })(jQuery, window, document)

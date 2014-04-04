@@ -1,7 +1,6 @@
 module Perspectives
   module Templating
     def self.included(base)
-
       base.class_eval do
         extend ClassMethods
 
@@ -16,6 +15,7 @@ module Perspectives
         klass = self
         @_mustache = Class.new(Mustache) do
           self.template_name = klass.to_s.underscore
+          self.raise_on_context_miss = Perspectives.raise_on_context_miss?
         end
       end
 
