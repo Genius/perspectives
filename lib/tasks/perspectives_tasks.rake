@@ -1,4 +1,4 @@
 # desc "Explaining what the task does"
-# task :linear_perspective do
+# task :perspectives do
 #   # Task goes here
 # end

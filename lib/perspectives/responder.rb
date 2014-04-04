@@ -1,4 +1,4 @@
-module LinearPerspective
+module Perspectives
   class Responder < ActionController::Responder
     def to_html
       render text: resource.to_html, layout: :default

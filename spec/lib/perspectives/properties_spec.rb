@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe LinearPerspective::Properties do
+describe Perspectives::Properties do
   module ::Users
-    class Properties < LinearPerspective::Base
+    class Properties < Perspectives::Base
       param :user
 
       property(:name) { user.name }
@@ -12,12 +12,12 @@ describe LinearPerspective::Properties do
   end
 
   module ::Users
-    class Profile < LinearPerspective::Base
+    class Profile < Perspectives::Base
       delegate_property :blog_url, to: :user
     end
   end
 
-  let(:context) { OpenStruct.new }
+  let(:context) { {} }
   let(:name) { 'Andrew Warner' }
   let(:blog_url) { 'a-warner.github.io' }
   let(:user) { OpenStruct.new :name => name }

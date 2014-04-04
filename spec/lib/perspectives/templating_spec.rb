@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe LinearPerspective::Templating do
+describe Perspectives::Templating do
   module ::Users
-    class SimpleInfo < LinearPerspective::Base
+    class SimpleInfo < Perspectives::Base
     end
   end
 

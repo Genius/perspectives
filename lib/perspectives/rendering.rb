@@ -1,4 +1,4 @@
-module LinearPerspective
+module Perspectives
   module Rendering
     def as_json(options = {})
       _property_map.merge(_template_key: _template_key)

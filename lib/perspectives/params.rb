@@ -1,4 +1,4 @@
-module LinearPerspective
+module Perspectives
   module Params
     def self.included(base)
       base.class_eval do

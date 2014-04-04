@@ -1,4 +1,4 @@
-module LinearPerspective
+module Perspectives
   module Macros
     def self.included(base)
       base.extend(ClassMethods)

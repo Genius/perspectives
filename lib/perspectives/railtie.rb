@@ -1,30 +1,30 @@
-require 'linear_perspective/controller_additions'
-require 'linear_perspective/responder'
+require 'perspectives/controller_additions'
+require 'perspectives/responder'
 
-module LinearPerspective
+module Perspectives
   class Railtie < Rails::Railtie
-    initializer 'linear_perspective.railtie' do |app|
+    initializer 'perspectives.railtie' do |app|
       app.config.autoload_paths += ['app/perspectives']
       app.config.watchable_dirs['app/mustaches'] = [:mustache]
 
       app.config.assets.paths << File.expand_path('../../../vendor/assets/javascripts', __FILE__)
 
-      LinearPerspective::Base.class_eval do
+      Perspectives::Base.class_eval do
         include app.routes.url_helpers
         include ERB::Util
       end
 
-      LinearPerspective.configure do |c|
+      Perspectives.configure do |c|
         c.template_path = app.root.join('app', 'mustaches')
         c.raise_on_context_miss = true
       end
 
-      app.assets.register_engine '.mustache', LinearPerspective::MustacheCompiler
-      app.config.assets.paths << LinearPerspective.template_path
+      app.assets.register_engine '.mustache', Perspectives::MustacheCompiler
+      app.config.assets.paths << Perspectives.template_path
 
       # TODO: probably bail if we're not in rails3/sprockets land...
       # TODO: probably cache asset version in prod?
-      ActionController::Base.send(:include, LinearPerspective::ControllerAdditions)
+      ActionController::Base.send(:include, Perspectives::ControllerAdditions)
     end
   end
 end

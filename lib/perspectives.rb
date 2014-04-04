@@ -1,12 +1,12 @@
 require 'forwardable'
 require 'mustache'
 require 'active_support/core_ext/string/inflections'
-require 'linear_perspective/base'
-require 'linear_perspective/configuration'
-require 'linear_perspective/mustache_compiler'
-require 'linear_perspective/railtie' if defined?(Rails) # TODO: older rails support!
+require 'perspectives/base'
+require 'perspectives/configuration'
+require 'perspectives/mustache_compiler'
+require 'perspectives/railtie' if defined?(Rails) # TODO: older rails support!
 
-module LinearPerspective
+module Perspectives
   class << self
     extend Forwardable
 

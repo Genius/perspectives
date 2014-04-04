@@ -33,27 +33,27 @@
     window.location.replace(url)
   }
 
-  var linearPerspectiveVersion = function() {
+  var PerspectivesVersion = function() {
     return $('meta').filter(function() {
       var name = $(this).attr('http-equiv')
-      return name && name.toUpperCase() === 'X-PERSPECTIVE-VERSION'
+      return name && name.toUpperCase() === 'X-PERSPECTIVEs-VERSION'
     }).attr('content')
   }
 
-  var renderLinearPerspectiveResponse = function(href, container, json, status, xhr) {
+  var renderPerspectivesResponse = function(href, container, json, status, xhr) {
     var $container = $(container)
-    console.time('Linear perspective rendering')
+    console.time(' perspectives rendering')
 
-    var version = linearPerspectiveVersion() || ''
-    if (version.length && version !== xhr.getResponseHeader('X-Perspective-Version')) {
+    var version = PerspectivesVersion() || ''
+    if (version.length && version !== xhr.getResponseHeader('X-Perspectives-Version')) {
       locationReplace(href)
       return false
     }
 
     var $rendered = $(renderTemplateData(json))
-    var $linearPerspective = $container
+    var $perspectives = $container
 
-    if ($linearPerspective.hasClass('transitions')) {
+    if ($perspectives.hasClass('transitions')) {
       var oldSegments = window.location.href.split('/'),
           newSegments = href.split('/')
 
@@ -71,38 +71,38 @@
           .removeClass(transposition)
       }, 0)
     } else {
-      $linearPerspective.html($rendered)
+      $perspectives.html($rendered)
     }
 
-    $(document).trigger('linear_perspective:reload')
+    $(document).trigger('perspectives:reload')
 
-    console.timeEnd('Linear perspective rendering')
+    console.timeEnd(' perspectives rendering')
   }
 
-  var handleLinearPerspectiveClick = function(container) {
+  var handlePerspectivesClick = function(container) {
     var href = this.href
 
     $.getJSON(href, function() {
       var args = Array.prototype.slice.call(arguments)
       args.unshift(href, container)
 
-      renderLinearPerspectiveResponse.apply(this, args)
+      renderPerspectivesResponse.apply(this, args)
       window.history.pushState({container: container}, href, href)
     })
 
     return false
   }
 
-  $(window).on('popstate.linear_perspective', function(event) {
+  $(window).on('popstate.perspectives', function(event) {
     var originalEvent = event.originalEvent
     if(originalEvent && originalEvent.state && originalEvent.state.container) {
-      $.getJSON(window.location.href, renderLinearPerspectiveResponse.bind(null, window.location.href, originalEvent.state.container))
+      $.getJSON(window.location.href, renderPerspectivesResponse.bind(null, window.location.href, originalEvent.state.container))
     }
   })
 
-  $.fn.perspective = function(selector, container) {
+  $.fn.perspectives = function(selector, container) {
     $(this).on('click', selector, function() {
-      return handleLinearPerspectiveClick.bind(this)(container)
+      return handlePerspectivesClick.bind(this)(container)
     })
   }
 })(jQuery, window, document)

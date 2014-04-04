@@ -1,4 +1,4 @@
-module LinearPerspective
+module Perspectives
   module Caching
     def self.included(base)
       base.extend(ClassMethods)
@@ -6,8 +6,8 @@ module LinearPerspective
       base.class_eval do
         config_attribute :_cache_key_additions_block
 
-        def_delegator 'LinearPerspective', :cache, :_cache
-        def_delegator 'LinearPerspective', :expand_cache_key, :_expand_cache_key
+        def_delegator 'Perspectives', :cache, :_cache
+        def_delegator 'Perspectives', :expand_cache_key, :_expand_cache_key
         private :_cache
       end
     end
@@ -40,18 +40,18 @@ module LinearPerspective
     end
 
     def _caching?
-      LinearPerspective.caching? && !!_cache_key_additions_block
+      Perspectives.caching? && !!_cache_key_additions_block
     end
 
     def _dependent_cache_keys
       _nested_perspectives.each_with_object([]) do |property_name, key|
-        perspective = __send__(property_name)
+        perspectives = __send__(property_name)
 
-        case perspective
+        case perspectives
         when Array
-          key.concat(perspective.map { |p| p.__send__(:_cache_key) }.flatten)
+          key.concat(perspectives.map { |p| p.__send__(:_cache_key) }.flatten)
         else
-          key.concat(perspective.__send__(:_cache_key))
+          key.concat(perspectives.__send__(:_cache_key))
         end
       end
     end

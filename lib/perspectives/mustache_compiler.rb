@@ -2,7 +2,7 @@
 
 require 'tilt'
 
-module LinearPerspective
+module Perspectives
   class MustacheCompiler < Tilt::Template
     self.default_mime_type = 'application/javascript'
 
@@ -10,7 +10,7 @@ module LinearPerspective
     end
 
     def evaluate(scope, locals, &block)
-      namespace = "this.#{LinearPerspective.template_namespace}"
+      namespace = "this.#{Perspectives.template_namespace}"
 
       <<-MustacheTemplate
         (function() {

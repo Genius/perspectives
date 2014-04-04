@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-describe LinearPerspective do
+describe Perspectives do
   it { should_not be_nil }
 end

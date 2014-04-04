@@ -1,4 +1,4 @@
-module LinearPerspective
+module Perspectives
   module Templating
     def self.included(base)
 
@@ -24,7 +24,7 @@ module LinearPerspective
       def _template_key
         @_template_key ||=
           _mustache.template_file.
-            sub(/^#{_mustache.template_path}\//, '').
+            sub(/^#{Regexp.escape(_mustache.template_path)}\//, '').
             chomp(".#{_mustache.template_extension}")
       end
     end

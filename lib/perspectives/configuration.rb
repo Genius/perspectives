@@ -1,4 +1,4 @@
-module LinearPerspective
+module Perspectives
   class Configuration
     extend Forwardable
     def_delegators 'Mustache', :template_path, :template_path=, :raise_on_context_miss, :raise_on_context_miss=

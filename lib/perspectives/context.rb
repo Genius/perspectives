@@ -1,4 +1,4 @@
-module LinearPerspective
+module Perspectives
   module Context
     def respond_to?(method, include_private = false)
       super || context.key?(method)

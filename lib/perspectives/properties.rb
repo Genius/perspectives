@@ -1,4 +1,4 @@
-module LinearPerspective
+module Perspectives
   module Properties
     def self.included(base)
       base.class_eval do
@@ -17,7 +17,7 @@ module LinearPerspective
     end
 
     def _resolve_partial_class_name(name)
-      LinearPerspective.resolve_partial_class_name(self.class.to_s.split('::').first, name)
+      Perspectives.resolve_partial_class_name(self.class.to_s.split('::').first, name)
     end
 
     module ClassMethods
@@ -59,7 +59,8 @@ module LinearPerspective
 
       def _setup_nested(name, locals, options, &block)
         name_str, name_sym = name.to_s, name.to_sym
-        prop_name = options.fetch(:property, name_str.split('/').last.pluralize).to_sym
+
+        prop_name = options.fetch(:property, _default_property_name(name_str, options)).to_sym
 
         unless block_given? || method_defined?(prop_name)
           local_procs = locals.each_with_object({}) { |(k, v), h| h[k.to_sym] = v.to_proc }
@@ -89,6 +90,12 @@ module LinearPerspective
 
         property(prop_name, &block)
         self._nested_perspectives += [prop_name]
+      end
+
+      def _default_property_name(name_str, options)
+        name = name_str.split('/').last
+        name = n.pluralize if options.key?(:collection)
+        name
       end
     end
   end
