@@ -10,7 +10,7 @@
           var new_value = $.extend(!!'deep_copy', {}, value)
 
           if (value['_template_key']) {
-            new_value['to_s'] = new_value['render'] = renderTemplateData(value)
+            new_value['to_s'] = new_value['to_html'] = renderTemplateData(value)
           }
 
           return new_value
