@@ -1,5 +1,0 @@
-= Perspectives
-
-This project rocks and uses MIT-LICENSE.
-
-# TODO
