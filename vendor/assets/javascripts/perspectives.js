@@ -76,7 +76,7 @@
       $perspectives.html($rendered)
     }
 
-    $(document).trigger('perspectives:reload')
+    $(document).trigger('perspectives:load', xhr)
 
     console.timeEnd('perspectives rendering')
   }
