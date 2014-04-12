@@ -3,6 +3,9 @@ module Perspectives
     def self.included(base)
       base.before_filter :set_perspectives_version
       base.helper_method :assets_meta_tag
+      base.class_attribute :perspectives_enabled_actions
+      delegate :perspectives_enabled_actions, to: 'self.class'
+      base.helper_method :perspective
 
       base.extend(ClassMethods)
     end
@@ -50,9 +53,26 @@ module Perspectives
       response.headers['X-Perspectives-Version'] = assets_version.to_s
     end
 
+    def perspectives_enabled_action?
+      return unless perspectives_enabled_actions
+
+      action = action_name.to_s
+
+      if perspectives_enabled_actions[:except]
+        !perspectives_enabled_actions[:except].include?(action)
+      elsif perspectives_enabled_actions[:only]
+        perspectives_enabled_actions[:only].include?(action)
+      else
+        true
+      end
+    end
+
     module ClassMethods
-      # TODO: probably some kind of :only => [:foo] support
       def perspectives_actions(options = {})
+        self.perspectives_enabled_actions = options.slice(:only, :except).each_with_object({}) do |h, (k, v)|
+          h[k] = Array(v).map(&:to_s)
+        end
+
         respond_to :html, :json, options
         self.responder = Perspectives::Responder
       end

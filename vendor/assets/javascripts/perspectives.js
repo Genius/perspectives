@@ -35,10 +35,10 @@
     window.location.replace(url)
   }
 
-  var PerspectivesVersion = function() {
+  var perspectivesVersion = function() {
     return $('meta').filter(function() {
       var name = $(this).attr('http-equiv')
-      return name && name.toUpperCase() === 'X-PERSPECTIVEs-VERSION'
+      return name && name.toUpperCase() === 'X-PERSPECTIVES-VERSION'
     }).attr('content')
   }
 
@@ -46,7 +46,7 @@
     var $container = $(container)
     console.time('perspectives rendering')
 
-    var version = PerspectivesVersion() || ''
+    var version = perspectivesVersion() || ''
     if (version.length && version !== xhr.getResponseHeader('X-Perspectives-Version')) {
       locationReplace(href)
       return false
@@ -108,5 +108,5 @@
     })
   }
 
-  LP.renderTemplateData = renderTemplateData
+  LP.renderTemplateData = LP.render = renderTemplateData
 })(jQuery, window, document)
