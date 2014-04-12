@@ -4,11 +4,11 @@ This project rocks and uses MIT-LICENSE.
 
 # TODO
 * DONE Files should be a wrapped collection that knows how to render itself
+* DONE-ish What to do about flash? (maybe port from RailsGenius?)
 * Need a generator that sets up the MustacheCompiler front-end stuff and requires the javascript library
 * Need cache multiget for nested collections
 * Fallbacks for history api in other browsers (some kind of modernizr situation?)
 * Generators
-* What to do about flash?
 * Examples!
 * Tests in multiple ruby/rails versions
     * Ruby 1.8 / 1.9 / 2.1
