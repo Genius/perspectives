@@ -52,8 +52,8 @@ module Perspectives
 
     module ClassMethods
       # TODO: probably some kind of :only => [:foo] support
-      def perspectives_actions
-        respond_to :html, :json
+      def perspectives_actions(options = {})
+        respond_to :html, :json, options
         self.responder = Perspectives::Responder
       end
     end
