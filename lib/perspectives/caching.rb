@@ -5,9 +5,6 @@ module Perspectives
 
       base.class_eval do
         config_attribute :_cache_key_additions_block
-
-        delegate :cache, :_cache, :expand_cache_key, :_expand_cache_key, to: 'Perspectives'
-        private :_cache
       end
     end
 
@@ -20,6 +17,14 @@ module Perspectives
     end
 
     private
+
+    def _cache
+      Perspectives.cache
+    end
+
+    def _expand_cache_key
+      Perspectives.expand_cache_key
+    end
 
     def _with_cache(*key_additions)
       return yield unless _caching?

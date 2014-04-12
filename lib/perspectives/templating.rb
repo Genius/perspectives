@@ -19,8 +19,6 @@ module Perspectives
         end
       end
 
-      private
-
       def _template_key
         @_template_key ||=
           _mustache.template_file.
