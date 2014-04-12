@@ -27,7 +27,7 @@ module Perspectives
           instance_variable_set(ivar, value)
         end
 
-        def_delegator 'self.class', name
+        delegate name, to: 'self.class'
       end
     end
   end

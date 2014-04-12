@@ -10,8 +10,6 @@ require 'perspectives/caching'
 
 module Perspectives
   class Base
-    extend Forwardable
-
     include Macros
     include Templating
     include Properties

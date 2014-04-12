@@ -6,8 +6,7 @@ module Perspectives
       base.class_eval do
         config_attribute :_cache_key_additions_block
 
-        def_delegator 'Perspectives', :cache, :_cache
-        def_delegator 'Perspectives', :expand_cache_key, :_expand_cache_key
+        delegate :cache, :_cache, :expand_cache_key, :_expand_cache_key, to: 'Perspectives'
         private :_cache
       end
     end

@@ -48,11 +48,18 @@ module Perspectives
         _setup_nested(name, options.fetch(:locals, {}), options.merge!(:collection => collection), &block)
       end
 
-      def delegate_property(*props, opts)
-        to = opts.fetch(:to) { raise ArgumentError, "delegate_property requires something to delegate to!" }
+      def delegate_property(*props)
+        delegate *props
+        opts = props.pop
 
-        def_delegators to, *props
-        props.each(&public_method(:property))
+        prop_names = props
+
+        if opts[:prefix]
+          prefix = opts[:prefix] == true ? opts[:to] : opts[:prefix]
+          prop_names = prop_names.map { |n| "#{prefix}_#{n}" }
+        end
+
+        prop_names.each(&public_method(:property))
       end
 
       private

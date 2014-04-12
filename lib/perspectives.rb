@@ -1,6 +1,7 @@
 require 'forwardable'
 require 'mustache'
 require 'active_support/core_ext/string/inflections'
+require 'active_support/core_ext/module/delegation'
 require 'perspectives/collection'
 require 'perspectives/base'
 require 'perspectives/configuration'
@@ -9,8 +10,6 @@ require 'perspectives/railtie' if defined?(Rails) # TODO: older rails support!
 
 module Perspectives
   class << self
-    extend Forwardable
-
     def template_namespace
       'LP'
     end
@@ -19,8 +18,8 @@ module Perspectives
       yield(configuration)
     end
 
-    def_delegators :configuration, :cache, :caching?, :template_path, :raise_on_context_miss?
-    def_delegator 'ActiveSupport::Cache', :expand_cache_key
+    delegate :cache, :caching?, :template_path, :raise_on_context_miss?, to: :configuration
+    delegate :expand_cache_key, to: 'ActiveSupport::Cache'
 
     def resolve_partial_class_name(top_level_view_namespace, name)
       camelized = name.to_s.camelize

@@ -4,7 +4,7 @@ module Perspectives
       base.class_eval do
         extend ClassMethods
 
-        def_delegators 'self.class', :_mustache, :_template_key
+        delegate :_mustache, :_template_key, to: 'self.class'
       end
     end
 
