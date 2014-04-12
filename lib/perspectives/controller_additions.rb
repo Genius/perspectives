@@ -69,7 +69,7 @@ module Perspectives
 
     module ClassMethods
       def perspectives_actions(options = {})
-        self.perspectives_enabled_actions = options.slice(:only, :except).each_with_object({}) do |h, (k, v)|
+        self.perspectives_enabled_actions = options.slice(:only, :except).each_with_object({}) do |(k, v), h|
           h[k] = Array(v).map(&:to_s)
         end
 
