@@ -29,7 +29,9 @@ module Perspectives
 
     module ClassMethods
       def param(*param_names)
-        self._required_params += param_names
+        options = param_names.extract_options!
+
+        self._required_params += param_names unless options[:allow_nil]
         param_names.each { |n| define_method(n) { _params[n] } }
       end
     end

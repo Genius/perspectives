@@ -36,8 +36,15 @@ module Perspectives
         end
       end
 
-      def nested(name, locals = {}, &block)
-        _setup_nested(name, locals, {}, &block)
+      def nested(name, args = {}, &block)
+        locals, options = args, {}
+
+        if args[:locals]
+          locals = args[:locals]
+          options = args.except(:locals)
+        end
+
+        _setup_nested(name, locals, options, &block)
       end
 
       def nested_collection(name, *args, &block)
@@ -80,6 +87,12 @@ module Perspectives
               else
                 self.class.instance_variable_set(nested_klass_ivar, _resolve_partial_class_name(name))
               end
+
+            if options[:unless]
+              return if instance_exec(self, &options[:unless])
+            elsif options[:if]
+              return unless instance_exec(self, &options[:if])
+            end
 
             realized_locals = local_procs.each_with_object({}) { |(k, v), h| h[k] = instance_exec(self, &v) }
 
