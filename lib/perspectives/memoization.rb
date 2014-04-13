@@ -12,16 +12,18 @@ module Perspectives
       def memoize_property(prop_name)
         raise ArgumentError, "No method #{prop_name}" unless method_defined?(prop_name)
 
-        ivar = "@_memoized_#{prop_name}"
+        original_property_method = "_unmemoized_#{prop_name}"
+        raise ArgumentError, "Already memoized property #{prop_name.inspect}" if method_defined?(original_property_method)
+
+        ivar = "@_memoized_#{prop_name.to_s.sub(/\?\Z/, '_query').sub(/!\Z/, '_bang')}"
+        alias_method original_property_method, prop_name
 
         class_eval <<-CODE, __FILE__, __LINE__ + 1
-          def #{prop_name}_with_memoization             # def name_with_memoization
+          def #{prop_name}                              # def name
             return #{ivar} if defined?(#{ivar})         # return @_memoized_name if defined?(@_memoized_name)
-            #{ivar} = #{prop_name}_without_memoization  # @_memoized_name = name_without_memoization
+            #{ivar} = #{original_property_method}      # @_memoized_name = _unmemoized_name
           end
         CODE
-        alias_method :"#{prop_name}_without_memoization", prop_name
-        alias_method prop_name, :"#{prop_name}_with_memoization"
       end
     end
   end
