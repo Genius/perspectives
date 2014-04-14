@@ -1,5 +1,7 @@
 module Perspectives
   module Properties
+    CantUseLambdas = Class.new(StandardError)
+
     def self.included(base)
       base.class_eval do
         extend ClassMethods
@@ -13,7 +15,13 @@ module Perspectives
     private
 
     def _property_map
-      _properties.each_with_object({}) { |p, h| h[p] = __send__(p) }
+      _properties.each_with_object({}) do |p, h|
+        h[p] = __send__(p)
+
+        if h[p].is_a?(Proc)
+          raise CantUseLambdas, "You cannot use the lambda mustache behavior if you want to render on the client...it's not portable!"
+        end
+      end
     end
 
     def _resolve_partial_class_name(name)
