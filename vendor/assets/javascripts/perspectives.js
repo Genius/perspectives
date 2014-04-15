@@ -42,21 +42,21 @@
     }).attr('content')
   }
 
-  var renderPerspectivesResponse = function(href, container, json, status, xhr) {
-    var $container = $(container)
+  var renderPerspectivesResponse = function(options) {
+    var $container = $(options.container)
     console.time('perspectives rendering')
 
     var version = perspectivesVersion() || ''
     if (version.length && version !== xhr.getResponseHeader('X-Perspectives-Version')) {
-      locationReplace(href)
+      locationReplace(options.href)
       return false
     }
 
-    var $rendered = $(renderTemplateData(json))
+    var $rendered = $(renderTemplateData(options.json))
 
     $container.html($rendered)
 
-    $(document).trigger('perspectives:load', xhr)
+    $(document).trigger('perspectives:load', options.xhr)
 
     console.timeEnd('perspectives rendering')
   }
@@ -68,20 +68,34 @@
     var replaceContainer = $this.attr('data-perspectives-replace') ? $this.attr('data-perspectives-replace') : container
 
     $.getJSON(fetchHref, function(json, status, xhr) {
-      var args = Array.prototype.slice.call(arguments)
-      args.unshift(href, replaceContainer)
+      $this.trigger('perspectives:response', [renderPerspectivesResponse, {
+        json: json,
+        status: status,
+        xhr: xhr,
+        href: href,
+        container: replaceContainer
+      }])
 
-      renderPerspectivesResponse.apply(this, args)
       window.history.pushState({container: container}, href, href)
     })
 
     return false
   }
 
+  $(document).on('perspectives:response', function(e, defaultRender, options) { defaultRender(options) })
+
   $(window).on('popstate.perspectives', function(event) {
     var originalEvent = event.originalEvent
     if(originalEvent && originalEvent.state && originalEvent.state.container) {
-      $.getJSON(window.location.href, renderPerspectivesResponse.bind(null, window.location.href, originalEvent.state.container))
+      $.getJSON(window.location.href, function(json, status, xhr) {
+        renderPerspectivesResponse({
+          json: json,
+          status: status,
+          xhr: xhr,
+          href: window.location.href,
+          container: originalEvent.state.container
+        })
+      })
     }
   })
 
