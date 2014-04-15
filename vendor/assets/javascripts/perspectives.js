@@ -65,7 +65,7 @@
     var $this = $(this)
     var href = this.href
     var fetchHref = $this.attr('data-perspectives-incremental-href') ? $this.attr('data-perspectives-incremental-href') : href
-    var replaceContainer = $this.attr('data-perspectives-replace') ? $this.attr('data-perspectives-replace') : container
+    var replaceContainer = $this.attr('data-perspectives-incremental-replace') ? $this.attr('data-perspectives-incremental-replace') : container
 
     $.getJSON(fetchHref, function(json, status, xhr) {
       $this.trigger('perspectives:response', [renderPerspectivesResponse, {
