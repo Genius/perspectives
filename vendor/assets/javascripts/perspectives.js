@@ -53,28 +53,8 @@
     }
 
     var $rendered = $(renderTemplateData(json))
-    var $perspectives = $container
 
-    if ($perspectives.hasClass('transitions')) {
-      var oldSegments = window.location.href.split('/'),
-          newSegments = href.split('/')
-
-      var transposition = 'transposed-' + (oldSegments.length < newSegments.length ? 'right' : 'left')
-
-      var $content = $('<div>', {'class': 'content ' + transposition })
-                      .append($rendered)
-
-      $container.html($('<div>', {'class': 'wrapper'}).append($content))
-
-      setTimeout(function() {
-        $container
-          .find('.content')
-          .addClass('loaded')
-          .removeClass(transposition)
-      }, 0)
-    } else {
-      $perspectives.html($rendered)
-    }
+    $container.html($rendered)
 
     $(document).trigger('perspectives:load', xhr)
 
