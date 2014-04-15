@@ -82,11 +82,14 @@
   }
 
   var handlePerspectivesClick = function(container) {
+    var $this = $(this)
     var href = this.href
+    var fetchHref = $this.attr('data-perspectives-incremental-href') ? $this.attr('data-perspectives-incremental-href') : href
+    var replaceContainer = $this.attr('data-perspectives-replace') ? $this.attr('data-perspectives-replace') : container
 
-    $.getJSON(href, function() {
+    $.getJSON(fetchHref, function(json, status, xhr) {
       var args = Array.prototype.slice.call(arguments)
-      args.unshift(href, container)
+      args.unshift(href, replaceContainer)
 
       renderPerspectivesResponse.apply(this, args)
       window.history.pushState({container: container}, href, href)
