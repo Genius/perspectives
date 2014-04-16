@@ -7,6 +7,9 @@ module Perspectives
       delegate :perspectives_enabled_actions, to: 'self.class'
       base.helper_method :perspective
 
+      base.class_attribute :perspectives_wrapping
+      base.perspectives_wrapping = []
+
       base.extend(ClassMethods)
     end
 
@@ -54,14 +57,42 @@ module Perspectives
     end
 
     def perspectives_enabled_action?
-      return unless perspectives_enabled_actions
+      action_enabled_by?(perspectives_enabled_actions)
+    end
+
+    def respond_with(perspective)
+      # TODO - respond_to equivalent
+      return super if !perspectives_enabled_action? || request.xhr?
+
+      wrapper = perspectives_wrapping.find do |perspective, options|
+        next unless action_enabled_by?(options)
+
+        if options[:unless].present?
+          !options[:unless].call(self)
+        elsif options[:if].present?
+          options[:if].call(self)
+        else
+          true
+        end
+      end
+
+      return super unless wrapper
+
+      perspective_name, options = *wrapper
+      args = options.fetch(:args) || proc { |*| {} }
+
+      super(perspective(perspective_name, args.call(self, perspective)))
+    end
+
+    def action_enabled_by?(options)
+      return false if options.nil?
 
       action = action_name.to_s
 
-      if perspectives_enabled_actions[:except]
-        !perspectives_enabled_actions[:except].include?(action)
-      elsif perspectives_enabled_actions[:only]
-        perspectives_enabled_actions[:only].include?(action)
+      if options[:except]
+        !options[:except].include?(action)
+      elsif options[:only]
+        options[:only].include?(action)
       else
         true
       end
@@ -75,6 +106,13 @@ module Perspectives
 
         respond_to :html, :json, options
         self.responder = Perspectives::Responder
+      end
+
+      def wrapped_with(perspective, options = {})
+        options[:only] = Array(options[:only]).map(&:to_s) if options[:only]
+        options[:except] = Array(options[:except]).map(&:to_s) if options[:except]
+
+        self.perspectives_wrapping += [[perspective, options]]
       end
     end
   end
