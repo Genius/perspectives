@@ -11,6 +11,8 @@ module Perspectives
       base.perspectives_wrapping = []
 
       base.extend(ClassMethods)
+
+      delegate 'resolve_perspective_class_name', to: 'self.class'
     end
 
     private
@@ -37,7 +39,7 @@ module Perspectives
         params = params_or_options
       end
 
-      Perspectives.resolve_partial_class_name(controller_name.camelize, name).new(context, params)
+      resolve_perspective_class_name(name).new(context, params)
     end
 
     def default_context
@@ -64,7 +66,7 @@ module Perspectives
       # TODO - respond_to equivalent
       return super if !perspectives_enabled_action? || request.xhr?
 
-      wrapper = perspectives_wrapping.find do |perspective, options|
+      wrapper = perspectives_wrapping.find do |_, options|
         next unless action_enabled_by?(options)
 
         if options[:unless].present?
@@ -78,10 +80,8 @@ module Perspectives
 
       return super unless wrapper
 
-      perspective_name, options = *wrapper
-      args = options.fetch(:args) || proc { |*| {} }
-
-      super(perspective(perspective_name, args.call(self, perspective)))
+      perspective_klass, options = *wrapper
+      super(perspective(perspective_klass, options[:args].call(self, perspective)))
     end
 
     def action_enabled_by?(options)
@@ -109,10 +109,24 @@ module Perspectives
       end
 
       def wrapped_with(perspective, options = {})
+        perspective_klass = resolve_perspective_class_name(perspective)
+
         options[:only] = Array(options[:only]).map(&:to_s) if options[:only]
         options[:except] = Array(options[:except]).map(&:to_s) if options[:except]
 
-        self.perspectives_wrapping += [[perspective, options]]
+        options[:if] ||= lambda { |c| c.params[perspective_klass.id_param].present? }
+        options[:args] ||= lambda do |controller, perspective|
+          {
+            perspective_klass.active_record_klass.name.underscore => perspective_klass.active_record_klass.find(controller.params[perspective_klass.id_param]),
+            options.fetch(:as, controller_name.underscore.singularize) => perspective
+          }
+        end
+
+        self.perspectives_wrapping += [[perspective_klass, options]]
+      end
+
+      def resolve_perspective_class_name(name)
+        Perspectives.resolve_partial_class_name(controller_name.camelize, name)
       end
     end
   end

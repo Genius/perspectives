@@ -13,7 +13,7 @@ module Perspectives
 
     def initialize(context, params)
       raise ArgumentError, "Params is not a hash!" unless params.is_a?(Hash)
-      @_params = params
+      @_params = params.symbolize_keys
       @context = context
       assert_valid_params!
     end

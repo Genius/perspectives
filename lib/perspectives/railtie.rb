@@ -1,5 +1,6 @@
 require 'perspectives/controller_additions'
 require 'perspectives/responder'
+require 'perspectives/active_record'
 
 module Perspectives
   class Railtie < Rails::Railtie
@@ -13,6 +14,7 @@ module Perspectives
         include ActionView::Helpers
         include app.routes.url_helpers
         include ERB::Util
+        include Perspectives::ActiveRecord
       end
 
       Perspectives.configure do |c|

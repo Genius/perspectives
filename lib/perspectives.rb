@@ -3,6 +3,7 @@ require 'mustache'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/module/delegation'
 require 'active_support/core_ext/array/extract_options'
+require 'active_support/core_ext/hash/keys'
 require 'perspectives/collection'
 require 'perspectives/base'
 require 'perspectives/configuration'
@@ -23,6 +24,8 @@ module Perspectives
     delegate :expand_cache_key, to: 'ActiveSupport::Cache'
 
     def resolve_partial_class_name(top_level_view_namespace, name)
+      return name if name.is_a?(Class) && name < Perspectives::Base
+
       camelized = name.to_s.camelize
 
       [top_level_view_namespace, camelized].join('::').constantize
