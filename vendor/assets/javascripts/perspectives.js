@@ -61,10 +61,14 @@
     console.timeEnd('perspectives rendering')
   }
 
+  var perspectivesContainer = function($element, defaultContainer) {
+    return $($element.attr('data-perspectives-target')).length ? $element.attr('data-perspectives-target') : defaultContainer
+  }
+
   var handlePerspectivesClick = function(container) {
     var $this = $(this)
     var href = this.href
-    var replaceContainer = $($this.attr('data-perspectives-container')).length ? $this.attr('data-perspectives-container') : container
+    var replaceContainer = perspectivesContainer($this, container)
 
     $.getJSON(href, function(json, status, xhr) {
       $this.trigger('perspectives:response', [renderPerspectivesResponse, {
@@ -82,6 +86,27 @@
   }
 
   $(document).on('perspectives:response', function(e, defaultRender, options) { defaultRender(options) })
+
+  $(document).on('ajax:success', function(event, data, status, xhr) {
+    if (!xhr.getResponseHeader('Content-Type').match(/json/i)) return
+
+    var $form = $(event.target),
+        $globalContainer = $('[data-global-perspectives-target]'),
+        href = $form.attr('action'),
+        container = perspectivesContainer($form, $globalContainer)
+
+    $form.trigger('perspectives:response', [renderPerspectivesResponse, {
+      json: data,
+      status: status,
+      xhr: xhr,
+      href: href,
+      container: container
+    }])
+
+    window.history.pushState({container: $globalContainer.selector}, href, href)
+
+    return false
+  })
 
   $(window).on('popstate.perspectives', function(event) {
     var originalEvent = event.originalEvent
@@ -104,6 +129,8 @@
   })
 
   $.fn.perspectives = function(selector, container) {
+    $(container).attr('data-global-perspectives-target', true)
+
     $(this).on('click', selector, function() {
       return handlePerspectivesClick.bind(this)(container)
     })
