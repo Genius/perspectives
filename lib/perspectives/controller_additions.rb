@@ -22,6 +22,7 @@ module Perspectives
         return super if block_given? || mimes.many? || !mimes.first.is_a?(Perspectives::Base)
 
         perspectives_object = mimes.first
+        perspectives_object = wrap_perspective(perspectives_object) if wrap_perspective?
 
         super() do |format|
           format.html { render text: perspectives_object.to_html, layout: :default }
@@ -40,6 +41,12 @@ module Perspectives
       end
 
       resolve_perspective_class_name(name).new(context, params)
+    end
+
+    def respond_with(response_perspective)
+      return super unless wrap_perspective?
+
+      super(wrap_perspective(response_perspective))
     end
 
     def default_context
@@ -62,11 +69,10 @@ module Perspectives
       action_enabled_by?(perspectives_enabled_actions)
     end
 
-    def respond_with(perspective)
-      # TODO - respond_to equivalent
-      return super if !perspectives_enabled_action? || request.xhr?
+    def perspectives_wrapper
+      return unless perspectives_enabled_action? && (request.headers['X-Perspectives-Full-Page'].present? || !request.xhr?)
 
-      wrapper = perspectives_wrapping.find do |_, options|
+      perspectives_wrapping.find do |_, options|
         next unless action_enabled_by?(options)
 
         if options[:unless].present?
@@ -77,11 +83,12 @@ module Perspectives
           true
         end
       end
+    end
+    alias_method :wrap_perspective?, :perspectives_wrapper
 
-      return super unless wrapper
-
-      perspective_klass, options = *wrapper
-      super(perspective(perspective_klass, options[:args].call(self, perspective)))
+    def wrap_perspective(unwrapped_perspective)
+      perspective_klass, options = *perspectives_wrapper
+      perspective_klass.new(unwrapped_perspective.context, options[:args].call(self, unwrapped_perspective))
     end
 
     def action_enabled_by?(options)

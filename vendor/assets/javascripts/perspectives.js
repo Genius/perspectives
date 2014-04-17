@@ -86,7 +86,12 @@
   $(window).on('popstate.perspectives', function(event) {
     var originalEvent = event.originalEvent
     if(originalEvent && originalEvent.state && originalEvent.state.container) {
-      $.getJSON(window.location.href, function(json, status, xhr) {
+      $.ajax({
+        method: 'GET',
+        url: window.location.href,
+        dataType: 'json',
+        headers: { 'x-perspectives-full-page': true }
+      }).success(function(json, status, xhr) {
         renderPerspectivesResponse({
           json: json,
           status: status,
