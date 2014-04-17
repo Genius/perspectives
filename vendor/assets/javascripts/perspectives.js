@@ -70,7 +70,12 @@
     var href = this.href
     var replaceContainer = perspectivesContainer($this, container)
 
-    $.getJSON(href, function(json, status, xhr) {
+    $.ajax({
+      method: 'GET',
+      url:href,
+      dataType: 'json',
+      headers: { 'x-perspectives-full-page': !!$this.attr('data-perspectives-full-page') }
+    }).success(function(json, status, xhr) {
       $this.trigger('perspectives:response', [renderPerspectivesResponse, {
         json: json,
         status: status,

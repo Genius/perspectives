@@ -70,7 +70,7 @@ module Perspectives
     end
 
     def perspectives_wrapper
-      return unless perspectives_enabled_action? && (request.headers['X-Perspectives-Full-Page'].present? || !request.xhr?)
+      return unless perspectives_enabled_action? && (request.headers['X-Perspectives-Full-Page'].to_s == 'true' || !request.xhr?)
 
       perspectives_wrapping.find do |_, options|
         next unless action_enabled_by?(options)
