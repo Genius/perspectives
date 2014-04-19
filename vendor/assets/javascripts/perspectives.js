@@ -1,4 +1,6 @@
 (function($, window, document, undefined) {
+  window.LP = window.LP || {}
+
   var renderTemplateData = function(data) {
     var view = {}
 
@@ -42,8 +44,9 @@
     }).attr('content')
   }
 
-  var renderPerspectivesResponse = function(options) {
-    var $container = $(options.container)
+  var renderResponse = function(options) {
+    var $globalContainer = globalPerspectivesContainer(),
+        $container = $(options.container).length ? $(options.container) : $globalContainer
     console.time('perspectives rendering')
 
     var version = perspectivesVersion() || ''
@@ -56,59 +59,69 @@
 
     $container.html($rendered)
 
+    if (!options.noPushState) {
+      window.history.pushState({container: globalPerspectivesContainer().selector}, options.href, options.href)
+    }
+
     $(document).trigger('perspectives:load', options.xhr)
 
     console.timeEnd('perspectives rendering')
   }
 
-  var perspectivesContainer = function($element, defaultContainer) {
-    return $($element.attr('data-perspectives-target')).length ? $element.attr('data-perspectives-target') : defaultContainer
+  var globalPerspectivesContainer = function() {
+    return $('[data-global-perspectives-target]')
   }
 
   var handlePerspectivesClick = function(container) {
     var $this = $(this)
-    var href = this.href
-    var replaceContainer = perspectivesContainer($this, container)
 
-    $.ajax({
-      method: 'GET',
-      url:href,
-      dataType: 'json',
-      headers: { 'x-perspectives-full-page': !!$this.attr('data-perspectives-full-page') }
-    }).success(function(json, status, xhr) {
-      $this.trigger('perspectives:response', [renderPerspectivesResponse, {
-        json: json,
-        status: status,
-        xhr: xhr,
-        href: href,
-        container: replaceContainer
-      }])
-
-      window.history.pushState({container: container}, href, href)
+    navigate({
+      href: this.href,
+      container: $this.attr('data-perspectives-target'),
+      fullPage: !!$this.attr('data-perspectives-full-page'),
+      element: $this
     })
 
     return false
   }
 
-  $(document).on('perspectives:response', function(e, defaultRender, options) { defaultRender(options) })
+  var navigate = function(options) {
+    var $element = $(options.element || document)
+
+    $.ajax({
+      method: 'GET',
+      url: options.href,
+      dataType: 'json',
+      headers: { 'x-perspectives-full-page': !!options.fullPage }
+    }).success(function(json, status, xhr) {
+      $element.trigger('perspectives:response', {
+        json: json,
+        status: status,
+        xhr: xhr,
+        href: options.href,
+        container: options.container,
+        noPushState: options.noPushState
+      })
+    })
+  }
+
+  $(document).on('perspectives:response', function(e, options) { renderResponse(options) })
 
   $(document).on('ajax:success', function(event, data, status, xhr) {
     if (!xhr.getResponseHeader('Content-Type').match(/json/i)) return
 
     var $form = $(event.target),
-        $globalContainer = $('[data-global-perspectives-target]'),
+        $globalContainer = globalPerspectivesContainer(),
         href = $form.attr('action'),
-        container = perspectivesContainer($form, $globalContainer)
+        container = $form.attr('data-perspectives-target')
 
-    $form.trigger('perspectives:response', [renderPerspectivesResponse, {
+    $form.trigger('perspectives:response', {
       json: data,
       status: status,
       xhr: xhr,
       href: href,
       container: container
-    }])
-
-    window.history.pushState({container: $globalContainer.selector}, href, href)
+    })
 
     return false
   })
@@ -116,19 +129,11 @@
   $(window).on('popstate.perspectives', function(event) {
     var originalEvent = event.originalEvent
     if(originalEvent && originalEvent.state && originalEvent.state.container) {
-      $.ajax({
-        method: 'GET',
-        url: window.location.href,
-        dataType: 'json',
-        headers: { 'x-perspectives-full-page': true }
-      }).success(function(json, status, xhr) {
-        renderPerspectivesResponse({
-          json: json,
-          status: status,
-          xhr: xhr,
-          href: window.location.href,
-          container: originalEvent.state.container
-        })
+      navigate({
+        href: window.location.href,
+        container: originalEvent.state.container,
+        fullPage: true,
+        noPushState: true
       })
     }
   })
@@ -142,4 +147,6 @@
   }
 
   LP.renderTemplateData = LP.render = renderTemplateData
+  LP.navigate = navigate
+  LP.renderResponse = renderResponse
 })(jQuery, window, document)
