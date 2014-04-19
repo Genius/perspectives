@@ -1,6 +1,7 @@
 require 'perspectives/controller_additions'
 require 'perspectives/responder'
 require 'perspectives/active_record'
+require 'generators/perspectives/install.rb'
 
 module Perspectives
   class Railtie < Rails::Railtie
