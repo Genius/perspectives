@@ -112,7 +112,7 @@
 
     var $form = $(event.target),
         $globalContainer = globalPerspectivesContainer(),
-        href = $form.attr('action'),
+        href = xhr.getResponseHeader('Location') || $form.attr('action'),
         container = $form.attr('data-perspectives-target')
 
     $form.trigger('perspectives:response', {
