@@ -13,7 +13,7 @@ require 'perspectives/railtie' if defined?(Rails) # TODO: older rails support!
 module Perspectives
   class << self
     def template_namespace
-      'LP'
+      'Perspectives'
     end
 
     def configure

@@ -1,5 +1,5 @@
 (function($, window, document, undefined) {
-  window.LP = window.LP || {}
+  window.Perspectives = window.Perspectives || {}
 
   var renderTemplateData = function(data) {
     var view = {}
@@ -28,7 +28,7 @@
 
     view['to_s'] = function() { toString() }
 
-    return LP[data._template_key](view)
+    return Perspectives.views[data._template_key](view)
   }
 
   // pretty much ganked from pjax...
@@ -146,7 +146,7 @@
     })
   }
 
-  LP.renderTemplateData = LP.render = renderTemplateData
-  LP.navigate = navigate
-  LP.renderResponse = renderResponse
+  Perspectives.renderTemplateData = Perspectives.render = renderTemplateData
+  Perspectives.navigate = navigate
+  Perspectives.renderResponse = renderResponse
 })(jQuery, window, document)

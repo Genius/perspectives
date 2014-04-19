@@ -15,15 +15,17 @@ module Perspectives
       <<-MustacheTemplate
         (function() {
         #{namespace} || (#{namespace} = {});
+        #{namespace}.views || (#{namespace}.views = {})
 
         var data = #{data.inspect}
 
         Mustache.parse(data)
 
-        #{namespace}[#{scope.logical_path.inspect}] = function(object) {
+        #{namespace}.views[#{scope.logical_path.inspect}] = function(object) {
           if (!object){ object = {}; }
           return Mustache.render(data, object)
         };
+
         }).call(this);
       MustacheTemplate
     end
