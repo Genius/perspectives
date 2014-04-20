@@ -18,6 +18,8 @@ module Perspectives
           REQS
 
           insert_into_file js_manifest, "#{requirements}\n", :after => "jquery_ujs\n"
+
+          gsub_file js_manifest, %r{^//= require turbolinks$}, ''
         else
           copy_file "application.js", js_manifest
         end
