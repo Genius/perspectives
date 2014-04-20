@@ -17,9 +17,10 @@ module Perspectives
 //= require_tree ../../mustaches
           REQS
 
-          insert_into_file js_manifest, "#{requirements}\n", :after => "jquery_ujs\n"
-
           gsub_file js_manifest, %r{^//= require turbolinks$}, ''
+
+          insert_into_file js_manifest, "#{requirements}\n", :after => "jquery_ujs\n"
+          insert_into_file js_manifest, "$(function() { $(document).perspectives('a', 'body') })\n", :after => "//= require_tree .\n"
         else
           copy_file "application.js", js_manifest
         end
