@@ -1,0 +1,21 @@
+<form accept-charset="UTF-8" action="{{submit_to}}" method="post" data-type="json" data-remote="true">
+  {{#errors}}
+  <div id="error_explanation">
+    <h3>{{error_count}} prohibited this {{name}} from being saved:</h3>
+
+    <ul>
+      {{#error_messages}}
+      <li>{{msg}}</li>
+      {{/error_messages}}
+    </ul>
+  </div>
+  {{/errors}}
+
+  {{#submit_method}}
+    <input type="hidden" name="_method" value="{{submit_method}}">
+  {{/submit_method}}
+
+  <div class="actions">
+    <input name="commit" type="submit" value="Submit" data-disable-with="Working...">
+  </div>
+</form>

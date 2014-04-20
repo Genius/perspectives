@@ -24,20 +24,19 @@ module Perspectives
 
       # hook_for :form_builder, :as => :scaffold
 
-      # def copy_form_file
-      #   filename = 'form.mustache'
-      #   template filename, mustache_path(filename)
-      # end
+      def copy_form_file
+        filename = 'form.mustache'
+        template filename, mustache_path(filename)
+
+        filename = 'form.rb'
+        template filename, perspectives_path(filename)
+      end
 
       protected
 
       def available_views
-        %w(index tiny show)
+        %w(index tiny show new edit)
       end
-
-      # def available_views
-      #   %w(index edit show new tiny)
-      # end
 
       def handler
         :perspectives
