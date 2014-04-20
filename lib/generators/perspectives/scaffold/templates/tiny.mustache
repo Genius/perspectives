@@ -1,0 +1,8 @@
+<tr>
+<% attributes.reject(&:password_digest?).each do |attribute| -%>
+  <td>{{<%= attribute.name %>}}</td>
+<% end %>
+  <td><a href="{{show_href}}">Show</a></td>
+  <td><a href="{{edit_href}}">Edit</a></td>
+  <td><a href="{{show_href}}" data-method="delete" data-confirm="Are you sure?" rel="nofollow">Destroy</a></td>
+</tr>

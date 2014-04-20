@@ -3,7 +3,6 @@ require 'rails/generators'
 module Perspectives
   module Generators
     class InstallGenerator < ::Rails::Generators::Base
-
       source_root File.expand_path("../templates", __FILE__)
       desc "Installs Perspectives and configures the Asset Pipeline"
 

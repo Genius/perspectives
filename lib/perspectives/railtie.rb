@@ -5,6 +5,14 @@ require 'generators/perspectives/install.rb'
 
 module Perspectives
   class Railtie < Rails::Railtie
+    if ::Rails.version.to_s >= "3.1"
+      config.app_generators.template_engine :perspectives
+      config.app_generators.templates << File.expand_path('../../generators/perspectives/templates', __FILE__)
+    else
+      config.generators.template_engine :perspectives
+      config.generators.templates << File.expand_path('../../generators/perspectives/templates', __FILE__)
+    end
+
     initializer 'perspectives.railtie' do |app|
       app.config.autoload_paths += ['app/perspectives']
       app.config.watchable_dirs['app/mustaches'] = [:mustache]
