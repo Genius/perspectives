@@ -1,0 +1,10 @@
+<% attributes.reject(&:password_digest?).each do |attribute| -%>
+<p>
+  <strong><%= attribute.human_name %>:</strong>
+  {{<%= attribute.name %>}}
+</p>
+
+<% end -%>
+
+<a href="{{edit_href}}">Edit</a>
+<a href="{{index_href}}">Back</a>

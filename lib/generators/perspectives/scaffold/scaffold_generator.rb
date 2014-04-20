@@ -1,3 +1,4 @@
+require 'rails/generators'
 require 'rails/generators/resource_helpers'
 
 module Perspectives
@@ -31,7 +32,7 @@ module Perspectives
       protected
 
       def available_views
-        %w(index tiny)
+        %w(index tiny show)
       end
 
       # def available_views
