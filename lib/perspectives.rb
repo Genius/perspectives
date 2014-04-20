@@ -6,6 +6,7 @@ require 'active_support/core_ext/array/extract_options'
 require 'active_support/core_ext/hash/keys'
 require 'perspectives/collection'
 require 'perspectives/base'
+require 'perspectives/forms'
 require 'perspectives/configuration'
 require 'perspectives/mustache_compiler'
 require 'perspectives/railtie' if defined?(Rails) # TODO: older rails support!

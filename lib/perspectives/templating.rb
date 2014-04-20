@@ -9,13 +9,22 @@ module Perspectives
     end
 
     module ClassMethods
+      def raise_on_context_miss?
+        Perspectives.raise_on_context_miss?
+      end
+
+      def template_path
+        Perspectives.template_path
+      end
+
       def _mustache
         return @_mustache if defined?(@_mustache)
 
         klass = self
         @_mustache = Class.new(Mustache) do
           self.template_name = klass.to_s.underscore
-          self.raise_on_context_miss = Perspectives.raise_on_context_miss?
+          self.raise_on_context_miss = klass.raise_on_context_miss?
+          self.template_path = klass.template_path
         end
       end
 

@@ -15,6 +15,10 @@
     <input type="hidden" name="_method" value="{{submit_method}}">
   {{/submit_method}}
 
+<% attributes.each do |attribute| -%>
+  {{{<%= attribute.name %>_field}}}
+<% end -%>
+
   <div class="actions">
     <input name="commit" type="submit" value="Submit" data-disable-with="Working...">
   </div>

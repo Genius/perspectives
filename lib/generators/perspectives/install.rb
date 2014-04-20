@@ -10,7 +10,12 @@ module Perspectives
         js_manifest = 'app/assets/javascripts/application.js'
 
         if File.exist?(js_manifest)
-          requirements = %w(mustache-0.8.1 perspectives ../../mustaches).map { |r| "//= require #{r}" }.join("\n")
+          requirements = <<-REQS.strip
+//= require mustache-0.8.1
+//= require perspectives
+//= require perspectives_views
+//= require_tree ../../mustaches
+          REQS
 
           insert_into_file js_manifest, "#{requirements}\n", :after => "jquery_ujs\n"
         else
