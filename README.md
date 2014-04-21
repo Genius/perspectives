@@ -291,6 +291,17 @@ work to set everything up. For setup stuff, check out `lib/perspectives/railtie.
 set up in later version of Rails. The other big different is that, in Rails 2, you'll want to use
 `respond_to` instead of `respond_with` (although that part should "just work")
 
+## Other benefits
+
+Besides shared rendering environments between the client and server, and easy-to-implement russian doll caching,
+Perspectives also force you to write views "the write way." Views in Perspectives world have a nice separation
+of concerns, where Mustache templates deal simply with laying out data in markup, and Perspectives deal with
+your business logic.
+
+This separation of concerns makes testing a whole lot easier than testing in ERB land, since Perspectives are
+just ruby objects. While you'd have to render an ERB template and inspect its output in order to testing it,
+Perspectives can just be created and individual logic sections tested.
+
 ## Philosophy
 
 The core idea behind perspectives if that, if we use Mustache templates for templating, we can
