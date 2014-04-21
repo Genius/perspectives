@@ -21,3 +21,6 @@ Scaffold a resource if you want an example:
 ```sh
 $ rails generate scaffold post title:string body:text
 ```
+
+## License
+MIT
