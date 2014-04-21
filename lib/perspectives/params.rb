@@ -4,7 +4,7 @@ module Perspectives
       base.class_eval do
         extend ClassMethods
 
-        config_attribute :_required_params, :_optional_params
+        class_attribute :_required_params, :_optional_params
         self._required_params = []
         self._optional_params = []
         attr_reader :_params, :context

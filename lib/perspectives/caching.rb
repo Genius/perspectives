@@ -4,7 +4,8 @@ module Perspectives
       base.extend(ClassMethods)
 
       base.class_eval do
-        config_attribute :_cache_key_additions_block
+        class_attribute :_cache_key_additions_block
+        delegate :_class_source_digest, :_mustache_source_digest, to: 'self.class'
       end
     end
 
@@ -22,8 +23,8 @@ module Perspectives
       Perspectives.cache
     end
 
-    def _expand_cache_key
-      Perspectives.expand_cache_key
+    def _expand_cache_key(*args, &block)
+      Perspectives.expand_cache_key(*args, &block)
     end
 
     def _with_cache(*key_additions)
@@ -37,7 +38,8 @@ module Perspectives
 
       [].tap do |key|
         key << self.class.to_s
-        key << Digest::MD5.hexdigest(_mustache.template.source)
+        key << _mustache_source_digest
+        key << _class_source_digest
         key.concat(Array(instance_eval(&_cache_key_additions_block))) if _cache_key_additions_block
         key.concat _dependent_cache_keys
       end
@@ -52,6 +54,7 @@ module Perspectives
         perspectives = __send__(property_name)
 
         case perspectives
+        when NilClass
         when Array
           key.concat(perspectives.map { |p| p.__send__(:_cache_key) }.flatten)
         else
@@ -65,6 +68,14 @@ module Perspectives
         raise ArgumentError, "No block given" unless block_given?
 
         self._cache_key_additions_block = block
+      end
+
+      def _class_source_digest
+        @_class_source_digest ||= Digest::MD5.hexdigest(File.read(filename))
+      end
+
+      def _mustache_source_digest
+        @_mustache_source_digest ||= Digest::MD5.hexdigest(_mustache.template.source)
       end
     end
   end

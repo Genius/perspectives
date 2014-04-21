@@ -5,7 +5,7 @@ module Perspectives
     def self.included(base)
       base.class_eval do
         extend ClassMethods
-        config_attribute :_properties, :_nested_perspectives
+        class_attribute :_properties, :_nested_perspectives
 
         self._properties = []
         self._nested_perspectives = []
