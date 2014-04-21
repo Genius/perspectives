@@ -1,6 +1,6 @@
 # Perspectives
 
-Render Rails views on the client OR on the server.
+Render views on the client OR on the server.
 
 ## Getting Started
 
