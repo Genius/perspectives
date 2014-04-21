@@ -1,8 +1,8 @@
 require 'forwardable'
 require 'perspectives/templating'
-require 'perspectives/properties'
+require 'perspectives/outputs'
 require 'perspectives/memoization'
-require 'perspectives/params'
+require 'perspectives/inputs'
 require 'perspectives/context'
 require 'perspectives/rendering'
 require 'perspectives/caching'
@@ -10,12 +10,18 @@ require 'perspectives/caching'
 module Perspectives
   class Base
     include Templating
-    include Properties
+    include Outputs
     include Memoization
-    include Params
+    include Inputs
     include Context
     include Rendering
     include Caching
+
+    class << self
+      alias_method :param, :input
+      alias_method :property, :output
+      alias_method :delegate_property, :delegate_output
+    end
 
     class << self
       def inherited(base)

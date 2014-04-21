@@ -38,7 +38,7 @@ perspective:
 ```ruby
 # app/perspectives/users/show.rb
 class Users::Show < Perspectives::Base
-  property(:name) { 'Andrew' }
+  output(:name) { 'Andrew' }
 end
 ```
 
@@ -56,26 +56,26 @@ Users::Show.new.to_html
 Users::Show.new.to_json
 ```
 
-In order for a property to be available in the Mustache template, you have to explicitly mark it
-as a property in a perspective. For example:
+In order for a output to be available in the Mustache template, you have to explicitly mark it
+as a output in a perspective. For example:
 
 ```ruby
 class Users::Show < Perspectives::Base
-  property(:name) { 'Andrew' } # declare a property
+  output(:name) { 'Andrew' } # declare a output
 
-  def another_property
+  def another_output
     'something else'
   end
-  property :another_property # mark a method as a property
+  output :another_output # mark a method as a output
 end
 ```
 
-If you expect certain inputs, you define those are "params". For example:
+If you expect certain inputs, you define those are "inputs". For example:
 
 ```ruby
 class Users::Show < Perspectives::Base
-  param :user # expects to be passed a "user" object, available as "user"
-  param :admin, allow_nil: true # can be optionally passed an "admin" param
+  input :user # expects to be passed a "user" object, available as "user"
+  input :admin, allow_nil: true # can be optionally passed an "admin" input
 end
 ```
 
@@ -124,12 +124,12 @@ If you want to render a perspective from another perspective, it's simple! For e
 
 ```ruby
 class Users::Show < Perspectives::Base
-  param :user
+  input :user
 
-  property(:name) { user.name }
+  output(:name) { user.name }
 
   nested 'avatar', user: :user
-  # will render Users::Avatar, passing "user" as a parameter, and make an "avatar"
+  # will render Users::Avatar, passing "user" as an input, and make an "avatar"
   # method availabe in the mustache template
 end
 ```
@@ -145,15 +145,15 @@ What about rendering a collection? Also simple!
 
 ```ruby
 class Projects::Show < Perspectives::Base
-  property :project
+  output :project
 
-  property(:title) { project.title }
+  output(:title) { project.title }
 
   nested_collection 'tasks/show',
     collection: proc { project.tasks },
-    property: :tasks
+    output: :tasks
 
-  # makes a "tasks" property available which is the list of tasks
+  # makes a "tasks" output available which is the list of tasks
 end
 ```
 
@@ -165,13 +165,13 @@ end
 ### Macros
 
 Perspectives also provides some nice macros to remove repeat code. For example,
-`delegate_property` exposes a method from an object as a property:
+`delegate_output` exposes a method from an object as a output:
 
 ```ruby
 class Users::Show < Perspectives::Base
-  param :user
-  delegate_property :name, :email, to: :user
-  # makes name, email properties available
+  input :user
+  delegate_output :name, :email, to: :user
+  # makes name, email outputs available
 end
 ```
 
@@ -300,7 +300,7 @@ written in Ruby, which holds the logic needed to generate a hash which can be us
 template.
 
 Since the Mustache template never communicates directly with the perspective, when a client makes a
-request to our site, we can build the hash of properties with a perspective, and then either render it
+request to our site, we can build the hash of outputs with a perspective, and then either render it
 on the server in the case that the client is a web crawler or a user visiting the page for the first time,
 OR, in the case that the client already has a browser instance loaded up, we can simply return the JSON
 hash to the client and let them render or update the page however they want.

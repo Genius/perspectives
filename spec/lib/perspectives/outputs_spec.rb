@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe Perspectives::Properties do
+describe Perspectives::Outputs do
   module ::Users
     class Properties < Perspectives::Base
-      param :user
+      input :user
 
-      property(:name) { user.name }
+      output(:name) { user.name }
 
       nested 'profile'
     end
@@ -13,7 +13,7 @@ describe Perspectives::Properties do
 
   module ::Users
     class Profile < Perspectives::Base
-      delegate_property :blog_url, to: :user
+      delegate_output :blog_url, to: :user
     end
   end
 
@@ -22,9 +22,9 @@ describe Perspectives::Properties do
   let(:blog_url) { 'a-warner.github.io' }
   let(:user) { OpenStruct.new :name => name }
 
-  let(:params) { {:user => user} }
+  let(:inputs) { {:user => user} }
 
-  subject { ::Users::Properties.new(context, params) }
+  subject { ::Users::Properties.new(context, inputs) }
 
   its(:name) { should == 'Andrew Warner' }
   its(:profile) { should_not be_nil }

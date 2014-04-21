@@ -1,13 +1,13 @@
 class <%= controller_class_name %>::Form < Perspectives::Base
-  param :<%= singular_table_name %>
+  input :<%= singular_table_name %>
 
-  property(:submit_to) do
+  output(:submit_to) do
     <%= singular_table_name %>.new_record? ? <%= plural_table_name %>_path : <%= singular_table_name %>_path(<%= singular_table_name %>)
   end
 
-  property(:submit_method) { !<%= singular_table_name %>.new_record? && 'patch' }
+  output(:submit_method) { !<%= singular_table_name %>.new_record? && 'patch' }
 
-  property(:errors) do
+  output(:errors) do
     errors = <%= singular_table_name %>.errors
     if errors.any?
       {
@@ -20,7 +20,7 @@ class <%= controller_class_name %>::Form < Perspectives::Base
 
 <% attributes.each do |attribute| -%>
   nested 'perspectives/forms/text_field',
-    property: :<%= attribute.name %>_field,
+    output: :<%= attribute.name %>_field,
     locals: { object: :<%= singular_table_name %>, field: '<%= attribute.name %>' }
 
 <% end -%>

@@ -50,8 +50,8 @@ module Perspectives
     end
 
     def _dependent_cache_keys
-      _nested_perspectives.each_with_object([]) do |property_name, key|
-        perspectives = __send__(property_name)
+      _nested_perspectives.each_with_object([]) do |output_name, key|
+        perspectives = __send__(output_name)
 
         case perspectives
         when NilClass

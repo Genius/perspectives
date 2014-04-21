@@ -1,21 +1,21 @@
 module Perspectives
-  module Properties
+  module Outputs
     CantUseLambdas = Class.new(StandardError)
 
     def self.included(base)
       base.class_eval do
         extend ClassMethods
-        class_attribute :_properties, :_nested_perspectives
+        class_attribute :_outputs, :_nested_perspectives
 
-        self._properties = []
+        self._outputs = []
         self._nested_perspectives = []
       end
     end
 
     private
 
-    def _property_map
-      _properties.each_with_object({}) do |p, h|
+    def _output_map
+      _outputs.each_with_object({}) do |p, h|
         h[p] = __send__(p)
 
         if h[p].is_a?(Proc)
@@ -29,13 +29,13 @@ module Perspectives
     end
 
     module ClassMethods
-      def property(name, *names, &block)
+      def output(name, *names, &block)
         unless names.empty?
-          raise ArgumentError, "Can't define multiple properties and pass a block" if block_given?
-          return names.push(name).each(&public_method(:property))
+          raise ArgumentError, "Can't define multiple outputs and pass a block" if block_given?
+          return names.push(name).each(&public_method(:output))
         end
 
-        self._properties += [name]
+        self._outputs += [name]
 
         unless method_defined?(name)
           raise ArgumentError, "No method #{name} and no block given" unless block_given?
@@ -63,7 +63,7 @@ module Perspectives
         _setup_nested(name, options.fetch(:locals, {}), options.merge!(:collection => collection), &block)
       end
 
-      def delegate_property(*props)
+      def delegate_output(*props)
         delegate *props
         opts = props.pop
 
@@ -74,7 +74,7 @@ module Perspectives
           prop_names = prop_names.map { |n| "#{prefix}_#{n}" }
         end
 
-        prop_names.each(&public_method(:property))
+        prop_names.each(&public_method(:output))
       end
 
       private
@@ -82,7 +82,7 @@ module Perspectives
       def _setup_nested(name, locals, options, &block)
         name_str, name_sym = name.to_s, name.to_sym
 
-        prop_name = options.fetch(:property, _default_property_name(name_str, options)).to_sym
+        prop_name = options.fetch(:output, _default_output_name(name_str, options)).to_sym
 
         unless block_given? || method_defined?(prop_name)
           local_procs = locals.each_with_object({}) { |(k, v), h| h[k.to_sym] = v.respond_to?(:to_proc) ? v.to_proc : proc { v } }
@@ -116,11 +116,11 @@ module Perspectives
           end
         end
 
-        property(prop_name, &block)
+        output(prop_name, &block)
         self._nested_perspectives += [prop_name]
       end
 
-      def _default_property_name(name_str, options)
+      def _default_output_name(name_str, options)
         name = name_str.split('/').last
         name = name.pluralize if options.key?(:collection)
         name

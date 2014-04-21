@@ -31,16 +31,16 @@ module Perspectives
       end
     end
 
-    def perspective(name, params_or_options = {})
-      if params_or_options.key?(:context) || params_or_options.key?(:params)
-        params = params_or_options.fetch(:params, {})
-        context = params_or_options.fetch(:context, default_context)
+    def perspective(name, inputs_or_options = {})
+      if inputs_or_options.key?(:context) || inputs_or_options.key?(:inputs)
+        inputs = inputs_or_options.fetch(:inputs, {})
+        context = inputs_or_options.fetch(:context, default_context)
       else
         context = default_context
-        params = params_or_options
+        inputs = inputs_or_options
       end
 
-      resolve_perspective_class_name(name).new(context, params)
+      resolve_perspective_class_name(name).new(context, inputs)
     end
 
     def respond_with(*resources, &block)
