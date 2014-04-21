@@ -1,7 +1,7 @@
 # Perspectives
 
-Render views on the client OR on the server. Breaking traditional Rails views into
-a logic-less Mustache template and a "Perspective" allows you to render views either on
+Render views on the client OR on the server. Perspectives breaks traditional Rails views into
+a logic-less Mustache template and a "Perspective", which allows you to render views either on
 the client or on the server. Building up a thick client that shares the rendering stack
 with the server allows sites to be SEO friendly and render HTML from deep links on the server
 for a great client experience, while also incrementally rendering parts of the page if the
@@ -153,7 +153,7 @@ class Projects::Show < Perspectives::Base
     collection: proc { project.tasks },
     property: :tasks
 
-  # makes a "tasks" method available which is the list of tasks
+  # makes a "tasks" property available which is the list of tasks
 end
 ```
 
@@ -188,7 +188,7 @@ end
 ```
 
 The Perspective cache will expire if the `user` changes, OR if the `users.mustache` template
-changes, OR if the `Users::Show` perspective changes. (or if any `nested` template changes)
+changes, OR if the `Users::Show` perspective changes. (or if any `nested` Perspective changes)
 
 ### Client javascript
 
@@ -227,6 +227,9 @@ If you want to render a response into a container other than the default you set
 
 Which will render the response into the `$('#viewing-user')` element. This might remind you of the PJAX
 API.
+
+You can also set `data-perspectives-target` on a form, which will render the response from the server
+into the target element on `ajax:success`.
 
 ### Events
 
@@ -270,6 +273,14 @@ To configure asset checking, just add the following to your application layout:
 
 If you're using Rails, Perspectives will set a response header which is the mtime of the most
 recently updated asset file. Perspectives will do a full page reload if the assets have changed.
+
+### More examples please!
+
+For a full example app, check out [Rails Genius](https://github.com/RapGenius/railsgenius),
+an app that I built to demonstrate Perspectives for Rails Conf. Rails Genius allows you to read
+and write inline annotations on RailsConf talk abstracts.
+
+(just like it's older sibling, [Rap Genius](http://rapgenius.com))
 
 ### Ruby version/framework support
 
