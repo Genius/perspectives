@@ -9,9 +9,9 @@ Gem::Specification.new do |s|
   s.version     = Perspectives::VERSION
   s.authors     = ["Andrew Warner"]
   s.email       = ["wwarner.andrew@gmail.com"]
-  s.homepage    = "https://github.com/a-warner/perspectives"
-  s.summary     = "View objects and logicless templates"
-  s.description = "View objects and logicless templates"
+  s.homepage    = "https://github.com/RapGenius/perspectives"
+  s.summary     = "Render shared views on the client OR on the server"
+  s.description = "Render shared views on the client OR on the server"
 
   s.files = Dir["{app,config,db,lib,vendor}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["spec/**/*"]
