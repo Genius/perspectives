@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    perspectives (0.0.1)
+    perspectives (0.0.2)
       activesupport
       mustache (~> 0.99.5)
 
