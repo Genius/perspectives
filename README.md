@@ -294,7 +294,7 @@ set up in later version of Rails. The other big different is that, in Rails 2, y
 ## Other benefits
 
 Besides shared rendering environments between the client and server, and easy-to-implement russian doll caching,
-Perspectives also force you to write views "the write way." Views in Perspectives world have a nice separation
+Perspectives also force you to write views "the right way." Views in Perspectives world have a nice separation
 of concerns, where Mustache templates deal simply with laying out data in markup, and Perspectives deal with
 your business logic.
 
