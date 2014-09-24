@@ -28,6 +28,14 @@ module Perspectives
       Perspectives.resolve_partial_class_name(self.class.to_s.split('::').first, name)
     end
 
+    def _default_collection_param_name(collection_class)
+      if collection_class.respond_to?(:base_class)
+        collection_class.base_class.demodulize.downcase
+      else
+        collection_class.name.demodulize.downcase
+      end
+    end
+
     module ClassMethods
       def property(name, *names, &block)
         unless names.empty?
@@ -108,7 +116,10 @@ module Perspectives
               collection = instance_exec(self, &options[:collection])
               return unless collection.present?
 
-              as = options.fetch(:as, collection.first.class.base_class.name.downcase).to_sym
+              default_as_name = _default_collection_param_name(collection.first.class)
+
+              as = options.fetch(:as, default_as_name).to_sym
+
               Collection.new(collection.map { |o| klass.new(context, realized_locals.merge(as => o)) })
             else
               klass.new(context, realized_locals)
