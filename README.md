@@ -7,6 +7,8 @@ with the server allows sites to be SEO friendly and render HTML from deep links 
 for a great client experience, while also incrementally rendering parts of the page if the
 user already has the site loaded in a browser.
 
+Perspectives was debuted at [RailsConf 2014](https://www.youtube.com/watch?v=WAN_P1m76GQ).
+
 ## Getting Started
 
 In your Gemfile:
